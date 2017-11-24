@@ -10,7 +10,12 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/wzd':{
+        target:'http://192.168.8.101',
+        changeOrigin: true
+      }
+    },
 
     // Various Dev Server settings
     env: require('./dev.env'),

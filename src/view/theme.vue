@@ -39,17 +39,18 @@
 <script>
 import countDownBtn from "@/components/countDownBtn";
 import tipModal from "@/components/tipModal";
+import api from "../api/api.js";
 export default {
   name: "theme",
   data() {
     return {
       telephone: "",
       code: "",
-      message: "", 
+      message: "",
       showTip: false
     };
   },
-  methods: { 
+  methods: {
     getCode(val) {
       let flag = this._verifyPhone();
       console.log(val);
@@ -78,6 +79,34 @@ export default {
     },
     _sendMessage() {
       console.log("send message!");
+      let submitObj = {
+        phone: this.telephone,
+        code: this.code,
+        source_id: localStorage.source_id,
+        source_tag: localStorage.source_tag
+      };
+      api.commitForm(submitObj).then(res => {
+        console.log(res);
+        //验证码失效
+        if (res.code == "-1") {
+          this.message = res.message;
+          this.showTip = true;
+        }
+        //成功
+        if (res.code == "0") {
+          if (isfromweichat == 1) {
+            if (localStorage.source_app == "xybt_xjbtfuli") {
+              //这里该是二维码  我直接写成文案弹窗
+              this.message = "您已注册，立即申请借款吧";
+              this.showTip = true;
+            } else {
+              //这里该是二维码  我直接写成文案弹窗
+              this.message = "您已注册，立即申请借款吧";
+              this.showTip = true;
+            }
+          } 
+        }
+      });
     },
     register() {
       let flag = this._verifyPhone();
@@ -99,15 +128,14 @@ export default {
         this.showTip = true;
         return;
       }
-
       //提交给后台
       this._commit();
     },
-    _commit () {
-      console.log('submit~')
+    _commit() {
+      console.log(this.telephone);
     },
-    toAgreement () {
-      this.$router.push({ name: 'agreement' })
+    toAgreement() {
+      this.$router.push({ name: "agreement" });
     }
   },
   components: {

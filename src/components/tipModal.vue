@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import android_load from '../utils/android_load.js'
+import ios_load from '../utils/ios_load.js'
 export default {
   name: "tipModal",
   props: {
@@ -15,10 +17,25 @@ export default {
     showTip: {
       type: Boolean,
       default: false
+    },
+    downLoad:{
+      type:Boolean,
+      default:false
     }
   },
   methods: {
     close() {
+      let brower_type = localStorage.brower_type
+      if (this.downLoad) {
+        switch (brower_type) {
+          case 'ios':
+            ios_load()  
+            break;
+          case 'android':
+            android_load()
+            break;
+        }
+      }
       this.$emit("update:showTip", false);
     }
   }

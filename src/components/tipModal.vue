@@ -8,8 +8,10 @@
 </template>
 
 <script>
-import android_load from '../utils/android_load.js'
-import ios_load from '../utils/ios_load.js'
+import android_load from "../utils/android_load.js";
+import ios_load from "../utils/ios_load.js";
+import { isWx } from "../utils/isFromWx";
+import { wxDownload } from "../utils/wx_load";
 export default {
   name: "tipModal",
   props: {
@@ -18,22 +20,26 @@ export default {
       type: Boolean,
       default: false
     },
-    downLoad:{
-      type:Boolean,
-      default:false
+    downLoad: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     close() {
-      let brower_type = localStorage.brower_type
+      let brower_type = localStorage.brower_type;
       if (this.downLoad) {
-        switch (brower_type) {
-          case 'ios':
-            ios_load()  
-            break;
-          case 'android':
-            android_load()
-            break;
+        if (isWx()) {
+          wxDownload()
+        } else {
+          switch (brower_type) {
+            case "ios":
+              ios_load();
+              break;
+            case "android":
+              android_load();
+              break;
+          }
         }
       }
       this.$emit("update:showTip", false);

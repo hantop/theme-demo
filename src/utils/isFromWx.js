@@ -1,8 +1,9 @@
 export function isWx() {
+    let u = navigator.userAgent;
     let isWx = u.match(/MicroMessenger/);
     if (isWx) {
-        return wx
-    }else{
-        return 
+        return true
+    } else {
+        return false
     }
 }

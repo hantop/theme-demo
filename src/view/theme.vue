@@ -34,13 +34,16 @@
 
       </div>
        <tipModal :showTip.sync="showTip" :message="message" :downLoad="downLoad"></tipModal>
+       <wxMask :showWx="showWx"></wxMask>
   </div>
 </template>
 <script>
 import countDownBtn from "@/components/countDownBtn";
 import tipModal from "@/components/tipModal";
 import api from "../api/api.js";
-import system from '../utils/system.js'
+import system from "../utils/system.js";
+import { isWx } from "../utils/isFromWx";
+import wxMask from "@/components/wxMask";
 export default {
   name: "theme",
   data() {
@@ -49,11 +52,15 @@ export default {
       code: "",
       message: "",
       showTip: false,
-      downLoad:false
+      downLoad: false,
+      showWx: false
     };
   },
-  created () {
-    localStorage.system = system()
+  created() {
+    localStorage.system = system();
+    if (isWx() && localStorage.source_app == "xybt_fuli") {
+      this.showWx = true;
+    }
   },
   methods: {
     getCode(val) {
@@ -100,10 +107,10 @@ export default {
           this.$refs.countDownBtn.start = true;
         }
         //已注册过
-        if (res.code == '1000') {
-          this.message = res.message
-          this.showTip = true
-          this.downLoad = true
+        if (res.code == "1000") {
+          this.message = res.message;
+          this.showTip = true;
+          this.downLoad = true;
         }
       });
     },
@@ -139,7 +146,8 @@ export default {
   },
   components: {
     countDownBtn,
-    tipModal
+    tipModal,
+    wxMask
   }
 };
 </script>
